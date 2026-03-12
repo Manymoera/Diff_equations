@@ -7,9 +7,9 @@
 
 using namespace std;
 
-void plot_graph(const vector<double>& val,
-                const string& prefix,
-                const string& title,
+void plot_graph(const vector<double> &val,
+                const string &prefix,
+                const string &title,
                 int window)
 {
   string script = "plot_" + prefix + ".gnu";
@@ -37,25 +37,27 @@ void plot_graph(const vector<double>& val,
   system(cmd.c_str());
 }
 
-void plot_probability_graph(const string& file,
-                            const string& title,
-                            const string& xlabel,
-                            const string& ylabel,
+void plot_probability_graph(const string &file,
+                            const string &title,
+                            const string &xlabel,
+                            const string &ylabel,
                             int window,
                             double boxwidth)
 {
-    ofstream plot("plot_temp.gnu");
+  ofstream plot("plot_temp.gnu");
 
-    plot << "set term qt " << window << "\n";
-    plot << "set title '" << title << "'\n";
-    plot << "set xlabel '" << xlabel << "'\n";
-    plot << "set ylabel '" << ylabel << "'\n";
-    plot << "set boxwidth " << boxwidth << "\n";
-    plot << "set style fill solid\n";
-    plot << "plot '" << file << "' with boxes\n";
-    plot << "pause -1\n";
+  plot << "set term qt " << window << "\n";
+  plot << "set title '" << title << "'\n";
+  plot << "set xlabel '" << xlabel << "'\n";
+  plot << "set ylabel '" << ylabel << "'\n";
+  plot << "set boxwidth " << boxwidth << "\n";
+  plot << "set style fill solid\n";
+  plot << "set xrange [-5:*]\n";
+  plot << "set yrange [-0.2:1.3]\n";
+  plot << "plot '" << file << "' with lines lw 2\n";
+  plot << "pause -1\n";
 
-    plot.close();
+  plot.close();
 
-    system("gnuplot -persist plot_temp.gnu &");
+  system("gnuplot -persist plot_temp.gnu &");
 }
