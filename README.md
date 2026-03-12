@@ -1,4 +1,8 @@
-Compile with\n
-g++ euler.cpp -o euler\n
-Start with\n
-./euler\n
+Compile with
+```
+g++ euler.cpp -o euler
+```
+Start with
+```
+./euler
+```
