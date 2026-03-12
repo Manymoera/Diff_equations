@@ -36,3 +36,26 @@ void plot_graph(const vector<double>& val,
   string cmd = "gnuplot -persist " + script + " &";
   system(cmd.c_str());
 }
+
+void plot_probability_graph(const string& file,
+                            const string& title,
+                            const string& xlabel,
+                            const string& ylabel,
+                            int window,
+                            double boxwidth)
+{
+    ofstream plot("plot_temp.gnu");
+
+    plot << "set term qt " << window << "\n";
+    plot << "set title '" << title << "'\n";
+    plot << "set xlabel '" << xlabel << "'\n";
+    plot << "set ylabel '" << ylabel << "'\n";
+    plot << "set boxwidth " << boxwidth << "\n";
+    plot << "set style fill solid\n";
+    plot << "plot '" << file << "' with boxes\n";
+    plot << "pause -1\n";
+
+    plot.close();
+
+    system("gnuplot -persist plot_temp.gnu &");
+}
