@@ -1,28 +1,26 @@
-# Настройки компилятора
 CXX = g++
-CXXFLAGS = -O3 -march=native -ffast-math -fopenmp -I./source
-TARGET = bin/euler
+CXXFLAGS_NO_OPTIMIZATION = -I./source
+CXXFLAGS_BASE = -O3 -march=native -ffast-math -I./source
+CXXFLAGS_OMP = $(CXXFLAGS_BASE) -fopenmp
 
-# Папки
-SRCDIR = source
-BINDIR = bin
-DATADIR = data
+TARGET_NO_OPTIMIZATION = bin/euler_no_optimization
+TARGET_SERIAL = bin/euler
+TARGET_OMP = bin/euler_OpenMP
 
-# Список исходников
-SOURCES = $(SRCDIR)/euler.cpp
+all: prepare $(TARGET_NO_OPTIMIZATION) $(TARGET_SERIAL) $(TARGET_OMP)
 
-# Основная цель
-all: prepare $(TARGET)
-
-# Создание необходимых папок
 prepare:
-	@mkdir -p $(BINDIR)
-	@mkdir -p $(DATADIR)
+	@mkdir -p bin
+	@mkdir -p data
 
-# Компиляция
-$(TARGET): $(SOURCES)
-	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(TARGET)
+$(TARGET_NO_OPTIMIZATION): source/algo_serial.cpp
+	$(CXX) $(CXXFLAGS_NO_OPTIMIZATION) source/algo_serial.cpp -o $(TARGET_NO_OPTIMIZATION)
 
-# Очистка проекта
+$(TARGET_SERIAL): source/algo_serial.cpp
+	$(CXX) $(CXXFLAGS_BASE) source/algo_serial.cpp -o $(TARGET_SERIAL)
+
+$(TARGET_OMP): source/algo_OpenMP.cpp
+	$(CXX) $(CXXFLAGS_OMP) source/algo_OpenMP.cpp -o $(TARGET_OMP)
+
 clean:
-	rm -rf $(BINDIR) $(DATADIR)
+	rm -rf bin data
