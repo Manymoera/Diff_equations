@@ -12,7 +12,7 @@ void plot_graph(const vector<double> &val,
                 const string &title,
                 int window)
 {
-  string script = "plot_" + prefix + ".gnu";
+  string script = "data/plot_" + prefix + ".gnu";
   ofstream plot(script);
 
   plot << "set term qt " << window << "\n";
@@ -23,8 +23,8 @@ void plot_graph(const vector<double> &val,
 
   for (int i = 0; i < val.size(); i++)
   {
-    plot << "'" << prefix << "_a_" << val[i]
-         << ".dat' with lines title 'a=" << val[i] << "'";
+    plot << "'data/" << prefix << "_a_" << val[i] 
+        << ".dat' with lines title 'a=" << val[i] << "'";
 
     if (i != val.size() - 1)
       plot << ", ";
@@ -47,7 +47,8 @@ void plot_probability_graph(const string& file,
                             double sigma,
                             int Ntraj)
 {
-    ofstream plot("plot_temp.gnu");
+    string script_path = "data/plot_temp.gnu";
+    ofstream plot(script_path);
 
     plot << "set term qt " << window << " size 1200,800\n";
 
@@ -72,5 +73,5 @@ void plot_probability_graph(const string& file,
 
     plot.close();
 
-    system("gnuplot -persist plot_temp.gnu &");
+    system("gnuplot -persist data/plot_temp.gnu &");
 }

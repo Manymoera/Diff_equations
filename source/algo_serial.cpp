@@ -4,6 +4,7 @@
 #include <random>
 #include <sstream>
 #include <vector>
+#include <chrono>
 #include "plot.h"
 
 using namespace std;
@@ -13,7 +14,7 @@ const double a = 0.5;
 const double Tmax = 1000;
 const int Ntraj = 10000;
 const int bins = 200;
-const double sigma = 0.3;
+const double sigma = 0.6;
 
 double f(double x, double a) { return a - sin(x); }
 
@@ -32,7 +33,7 @@ void Euler_no_noise(vector<double> val, double x0, double t0, double h,
   {
     ostringstream ss;
     ss << a;
-    string filename = "data_a_" + ss.str() + ".dat";
+    string filename = "data/data_a_" + ss.str() + ".dat";
     ofstream file(filename);
 
     double t = t0;
@@ -58,7 +59,7 @@ void Euler_noise(vector<double> val, double x0, double t0, double h, double T)
   {
     ostringstream ss;
     ss << a;
-    string filename = "data_noise_a_" + ss.str() + ".dat";
+    string filename = "data/data_noise_a_" + ss.str() + ".dat";
     ofstream file(filename);
 
     double t = t0;
@@ -133,7 +134,7 @@ void crossings_graph(const vector<double> &tau,
     cumulative[i] = sum;
   }
 
-  ofstream file("particles_left.dat");
+  ofstream file("data/particles_left.dat");
 
   for (int i = 0; i < bins; i++)
   {
@@ -146,7 +147,7 @@ void crossings_graph(const vector<double> &tau,
 
   file.close();
 
-  plot_probability_graph("particles_left.dat",
+  plot_probability_graph("data/particles_left.dat",
                          "Кол-во частиц внутри ямы",
                          "Время",
                          "Кол-во частиц",
@@ -166,8 +167,16 @@ int main()
 
   // Euler_no_noise(a_values, x0, t0, h, T);
   // Euler_noise(a_values, x0, t0, h, T);
-
+  cout << "Starting simulation for Ntraj = " << Ntraj << "..." << endl;
+  // Замер времени
+  auto start = chrono::high_resolution_clock::now();
+  
   vector<double> tau = probability_density(a, h, Tmax, Ntraj);
+
+  auto end = chrono::high_resolution_clock::now();
+  chrono::duration<double> diff = end - start;
+
+  cout << "Time taken for probability_density: " << diff.count() << " seconds" << endl;
 
   crossings_graph(tau, Tmax, bins, Ntraj);
 
