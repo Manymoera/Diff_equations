@@ -10,11 +10,7 @@
 
 using namespace std;
 
-const double T = 20.0;
 const double a = 0.5;
-const double Tmax = 1000;
-const int Ntraj = 10000;
-const int bins = 200;
 const double sigma = 0.6;
 
 double f(double x, double a) { return a - sin(x); }
@@ -89,7 +85,6 @@ vector<double> probability_density(double a,
     double x_barrier = M_PI - asin(a);
     vector<double> tau;
 
-    // Резервируем память, чтобы избежать частых аллокаций
     tau.reserve(Ntraj);
 
     #pragma omp parallel
@@ -163,30 +158,55 @@ void crossings_graph(const vector<double> &tau,
                            a, Tmax, sigma, Ntraj);
 }
 
+void test(double h, double t0, double x0, double T, int bins, int Ntraj, double Tmax, int iteration_amount) {
+    chrono::duration<double> total_time;
+
+    for(int i = 0; i < iteration_amount; i++) {
+        cout << "Starting " << "i = " << i << " simulation for Ntraj = " << Ntraj << "..." << endl;
+
+        auto start = chrono::high_resolution_clock::now();
+
+        vector<double> tau = probability_density(a, h, Tmax, Ntraj);
+
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> diff = end - start;
+
+        cout << "Time taken for probability_density: " << diff.count() << " seconds" << endl;
+
+        //crossings_graph(tau, Tmax, bins, Ntraj);
+
+        total_time += diff;
+    }
+
+    std::cout << endl;
+    std::cout << "Total time taken: " << total_time.count() << endl;
+    std::cout << "Mean time: " << total_time.count() / iteration_amount << endl;
+}
+
 int main()
 {
     double h = 0.01;
-
     double t0 = 0.0;
     double x0 = 0.0;
     double T = 20.0;
 
+    const int bins = 200;
+    const int Ntraj = 10000;
+    const double Tmax = 1000;
+
     vector<double> a_values = {0.5, 1.5, 2.5};
+
+    test(h, t0, x0, T, bins, Ntraj, Tmax, 10);
 
     // Euler_no_noise(a_values, x0, t0, h, T);
     // Euler_noise(a_values, x0, t0, h, T);
-    cout << "Starting simulation for Ntraj = " << Ntraj << "..." << endl;
-    // Замер времени
-    auto start = chrono::high_resolution_clock::now();
-
-    vector<double> tau = probability_density(a, h, Tmax, Ntraj);
-
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> diff = end - start;
-
-    cout << "Time taken for probability_density: " << diff.count() << " seconds" << endl;
-
-    crossings_graph(tau, Tmax, bins, Ntraj);
+    // cout << "Starting simulation for Ntraj = " << Ntraj << "..." << endl;
+    // auto start = chrono::high_resolution_clock::now();
+    // vector<double> tau = probability_density(a, h, Tmax, Ntraj);
+    // auto end = chrono::high_resolution_clock::now();
+    // chrono::duration<double> diff = end - start;
+    // cout << "Time taken for probability_density: " << diff.count() << " seconds" << endl;
+    // crossings_graph(tau, Tmax, bins, Ntraj);
 
     return 0;
 }

@@ -1,13 +1,23 @@
 CXX = g++
 CXXFLAGS_NO_OPTIMIZATION = -I./source
-CXXFLAGS_BASE = -O3 -march=native -ffast-math -I./source
-CXXFLAGS_OMP = $(CXXFLAGS_BASE) -fopenmp
+CXXFLAGS_CMD_O3 = -O3  -I./source
+CXXFLAGS_CMD_O3_NATIVE_MARCH = -O3 -march=native -I./source
+CXXFLAGS_CMD_O3_NATIVE_MARCH_FFAST = -O3 -march=native -ffast-math -I./source
+CXXFLAGS_OMP = $(CXXFLAGS_CMD_O3_NATIVE_MARCH_FFAST) -fopenmp
 
 TARGET_NO_OPTIMIZATION = bin/euler_no_optimization
-TARGET_SERIAL = bin/euler
+TARGET_CMD_O3 = bin/euler_O3
+TARGET_CMD_O3_NATIVE_MARCH = bin/euler_O3_native_march
+TARGET_CMD_O3_NATIVE_MARCH_FFAST = bin/euler_O3_native_march_ffast
 TARGET_OMP = bin/euler_OpenMP
 
-all: prepare $(TARGET_NO_OPTIMIZATION) $(TARGET_SERIAL) $(TARGET_OMP)
+TARGETS = $(TARGET_NO_OPTIMIZATION) \
+          $(TARGET_CMD_O3) \
+          $(TARGET_CMD_O3_NATIVE_MARCH) \
+          $(TARGET_CMD_O3_NATIVE_MARCH_FFAST) \
+          $(TARGET_OMP)
+
+all: prepare $(TARGETS)
 
 prepare:
 	@mkdir -p bin
@@ -16,11 +26,21 @@ prepare:
 $(TARGET_NO_OPTIMIZATION): source/algo_serial.cpp
 	$(CXX) $(CXXFLAGS_NO_OPTIMIZATION) source/algo_serial.cpp -o $(TARGET_NO_OPTIMIZATION)
 
-$(TARGET_SERIAL): source/algo_serial.cpp
-	$(CXX) $(CXXFLAGS_BASE) source/algo_serial.cpp -o $(TARGET_SERIAL)
+$(TARGET_CMD_O3): source/algo_serial.cpp
+	$(CXX) $(CXXFLAGS_CMD_O3) source/algo_serial.cpp -o $(TARGET_CMD_O3)
+
+$(TARGET_CMD_O3_NATIVE_MARCH): source/algo_serial.cpp
+	$(CXX) $(CXXFLAGS_CMD_O3_NATIVE_MARCH) source/algo_serial.cpp -o $(TARGET_CMD_O3_NATIVE_MARCH)
+
+$(TARGET_CMD_O3_NATIVE_MARCH_FFAST): source/algo_serial.cpp
+	$(CXX) $(CXXFLAGS_CMD_O3_NATIVE_MARCH_FFAST) source/algo_serial.cpp -o $(TARGET_CMD_O3_NATIVE_MARCH_FFAST)
 
 $(TARGET_OMP): source/algo_OpenMP.cpp
 	$(CXX) $(CXXFLAGS_OMP) source/algo_OpenMP.cpp -o $(TARGET_OMP)
 
 clean:
 	rm -rf bin data
+
+plot:
+	@echo "Generating performance plots..."
+	@python3 source/plot_bench.py
