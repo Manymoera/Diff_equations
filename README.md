@@ -12,3 +12,8 @@ To start benchmark
 chmod +x benchmark.sh
 ./benchmark.sh
 ```
+To make time histogram
+```
+make plot
+*Time values are hardcoded for now
+```
