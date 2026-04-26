@@ -19,3 +19,7 @@ echo "Running euler_O3_native_march_ffast:"
 echo "---------------------------------------"
 echo "Running euler with OpenMP:"
 ./bin/euler_OpenMP
+
+echo "---------------------------------------"
+echo "Running euler with OpenMP and Xorshift:"
+./bin/euler_OpenMP_xorshift

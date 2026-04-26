@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -7,6 +8,7 @@
 #include <chrono>
 #include <omp.h>
 #include "plot.h"
+#include "xorshift.h"
 
 using namespace std;
 
@@ -17,10 +19,19 @@ double f(double x, double a) { return a - sin(x); }
 
 double noise(double h)
 {
-    static thread_local std::default_random_engine gen(random_device{}());
-    static std::normal_distribution<double> normal(0.0, 1.0);
-
-    return sigma * sqrt(h) * normal(gen);
+    
+    // Инициализируем генератор для каждого потока один раз
+    static thread_local Xorshift64 gen(std::random_device{}());
+    
+    // Преобразование Бокса-Мюллера для получения нормального распределения
+    // Оно требует два равномерно распределенных числа
+    double u1 = gen.next_double();
+    double u2 = gen.next_double();
+    
+    // Генерируем стандартное нормальное число (Z ~ N(0,1))
+    double z = sqrt(-2.0 * log(u1 + 1e-15)) * cos(2.0 * M_PI * u2);
+    
+    return sigma * sqrt(h) * z;
 }
 
 void Euler_no_noise(vector<double> val, double x0, double t0, double h,

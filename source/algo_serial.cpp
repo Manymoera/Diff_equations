@@ -184,7 +184,7 @@ int main()
   double T = 20.0;
 
   const int bins = 200;
-  const int Ntraj = 10000;
+  const int Ntraj = 100000;
   const double Tmax = 1000;
 
   test(h, t0, x0, T, bins, Ntraj, Tmax, 10);

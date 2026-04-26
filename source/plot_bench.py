@@ -6,8 +6,8 @@ try:
     versions = df.columns[1:]
     times = df.iloc[0, 1:].values
 except:
-    versions = ['No Opt', 'O3', 'O3+native_march', 'O3+native_march+fast-math', 'OpenMP']
-    times = [168.80, 49.47, 49.42, 46.69, 28.77]
+    versions = ['No Opt', 'O3', 'O3+native_march', 'O3+native_march+fast-math', 'OpenMP', 'OpenMP_xorshift']
+    times = [175.19, 52.26, 52.09, 47.99, 29.46, 6.35]
 
 plt.figure(figsize=(10, 6))
 colors = ['#888888', '#3498db', '#2980b9', '#1f618d', '#27ae60']
