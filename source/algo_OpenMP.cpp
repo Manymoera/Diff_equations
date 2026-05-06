@@ -164,7 +164,7 @@ void test(double h, double t0, double x0, double T, int bins, int Ntraj, double 
 
         cout << "Time taken for probability_density: " << diff.count() << " seconds" << endl;
 
-        //crossings_graph(tau, Tmax, bins, Ntraj);
+        crossings_graph(tau, Tmax, bins, Ntraj);
 
         total_time += diff;
     }
@@ -182,12 +182,12 @@ int main()
     double T = 20.0;
 
     const int bins = 200;
-    const int Ntraj = 100000;
+    const int Ntraj = 10000;
     const double Tmax = 1000;
 
     vector<double> a_values = {0.5, 1.5, 2.5};
 
-    test(h, t0, x0, T, bins, Ntraj, Tmax, 10);
+    test(h, t0, x0, T, bins, Ntraj, Tmax, 1);
 
     // Euler_no_noise(a_values, x0, t0, h, T);
     // Euler_noise(a_values, x0, t0, h, T);
