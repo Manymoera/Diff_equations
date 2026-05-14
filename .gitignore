@@ -2,3 +2,5 @@
 *.gnu
 euler*
 benchmark_plot.png
+*tau_comp
+bin

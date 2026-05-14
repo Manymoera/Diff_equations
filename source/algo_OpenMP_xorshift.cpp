@@ -172,7 +172,6 @@ void crossings_graph(const vector<double> &tau,
 
     for (double t : tau)
     {
-        // Учитываем только те частицы, которые покинули яму (t >= 0)
         if (t >= 0)
         {
             int k = t / dt;
@@ -192,7 +191,7 @@ void crossings_graph(const vector<double> &tau,
     ofstream file("data/particles_left.dat");
 
     double auc = 0.0;
-    double prev_left = 1.0; // В момент t=0 в яме 100% частиц (1.0)
+    double prev_left = 1.0;
 
     for (int i = 0; i < bins; i++)
     {
@@ -202,7 +201,6 @@ void crossings_graph(const vector<double> &tau,
 
         file << t << " " << left << endl;
 
-        // МЕТОД ТРАПЕЦИЙ: Площадь = ( (y1 + y2) / 2 ) * dx
         auc += (prev_left + left) / 2.0 * dt;
         prev_left = left;
     }
